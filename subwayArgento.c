@@ -153,14 +153,21 @@ int main ()
 	int rc;
 	int *equipoNombre1 =malloc(sizeof(*equipoNombre1));
 	int *equipoNombre2 =malloc(sizeof(*equipoNombre2));
+
+	int *equipoNombre3 =malloc(sizeof(*equipoNombre3));
+	int *equipoNombre4 =malloc(sizeof(*equipoNombre4));
 //faltan equipos
   
 	*equipoNombre1 = 1;
 	*equipoNombre2 = 2;
+	*equipoNombre3 = 3;
+	*equipoNombre4 = 4;
 
 	//creo las variables los hilos de los equipos
 	pthread_t equipo1; 
 	pthread_t equipo2;
+	pthread_t equipo3;
+	pthread_t equipo4;
 //faltan hilos
   
 	//inicializo los hilos de los equipos
@@ -173,6 +180,17 @@ int main ()
                             NULL,                          //atributos del thread
                                 ejecutarReceta,             //funcion a ejecutar
                                 equipoNombre2);
+
+	rc = pthread_create(&equipo3,                           //identificador unico
+                            NULL,                          //atributos del thread
+                                ejecutarReceta,             //funcion a ejecutar
+                                equipoNombre3);
+
+	rc = pthread_create(&equipo4,                           //identificador unico
+                            NULL,                          //atributos del thread
+                                ejecutarReceta,             //funcion a ejecutar
+                                equipoNombre4);
+							
   //faltn inicializaciones
 
 
@@ -184,6 +202,8 @@ int main ()
 	//join de todos los hilos
 	pthread_join (equipo1,NULL);
 	pthread_join (equipo2,NULL);
+	pthread_join (equipo3,NULL);
+	pthread_join (equipo4,NULL);
 //.. faltan joins
 
 
