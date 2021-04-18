@@ -70,6 +70,24 @@ void* cortar(void *data) {
     pthread_exit(NULL);
 }
 
+//funcion mezclar
+void* mezclar(void *data) {
+	//creo el nombre de la accion de la funcion 
+	char *accion = "mezclar";
+	//creo el puntero para pasarle la referencia de memoria (data) del struct pasado por parametro (la cual es un puntero). 
+	struct parametro *mydata = data;
+	//señal para poder mezclar
+	sem_wait(&mydata->semaforos_param.sem_mezclar);
+	//llamo a la funcion imprimir le paso el struct y la accion de la funcion
+	imprimirAccion(mydata,accion);
+	//uso sleep para simular que que pasa tiempo
+	usleep( 20000 );
+	//doy la señal a la siguiente accion (cortar me habilita mezclar)
+    sem_post(&mydata->semaforos_param.sem_mezclar);
+	
+    pthread_exit(NULL);
+}
+
 void* ejecutarReceta(void *i) {
 	
 	//variables semaforos
@@ -77,7 +95,8 @@ void* ejecutarReceta(void *i) {
 	//crear variables semaforos aqui
 	
 	//variables hilos
-	pthread_t p1; 
+	pthread_t p1;
+	pthread_t p2; 
 	//crear variables hilos aqui
 	
 	//numero del equipo (casteo el puntero a un int)
@@ -123,11 +142,17 @@ void* ejecutarReceta(void *i) {
                             NULL,                          //atributos del thread
                                 cortar,             //funcion a ejecutar
                                 pthread_data);                     //parametros de la funcion a ejecutar, pasado por referencia
+
+	rc = pthread_create(&p2,                           //identificador unico
+                            NULL,                          //atributos del thread
+                                mezclar,             //funcion a ejecutar
+                                pthread_data);                     //parametros de la funcion a ejecutar, pasado por referencia
 	//crear demas hilos aqui
 	
 	
 	//join de todos los hilos
 	pthread_join (p1,NULL);
+	pthread_join (p2,NULL);
 	//crear join de demas hilos
 
 
